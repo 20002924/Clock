@@ -11,6 +11,7 @@ public class Controller {
     Model model;
     View view;
     
+    
     public Controller(Model m, View v) {
         model = m;
         view = v;
@@ -20,6 +21,7 @@ public class Controller {
                 model.update();
             }
         };
+        
         
         timer = new Timer(100, listener);
         timer.start();
