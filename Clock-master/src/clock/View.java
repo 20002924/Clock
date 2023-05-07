@@ -153,6 +153,11 @@ public class View implements Observer {
                 String baseTime = alarmTime.replaceAll(":","");
                 int namedTime = Integer.valueOf(baseTime);
                 int priority = namedTime - nowTime;
+                //int priority = nowTime - namedTime;
+                if (priority < 0) {
+                    priority = priority + 240000;
+                    priority = Math.abs(priority);
+                }
                 System.out.println("Adding " + timenumber.getTime() + " with priority " + priority);
                 try {
                 q.add(timenumber, priority);

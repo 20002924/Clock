@@ -1,7 +1,15 @@
 package clock;
 
+import java.awt.FlowLayout;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 //import java.util.GregorianCalendar;
 
 public class Model extends Observable {
@@ -18,6 +26,8 @@ public class Model extends Observable {
     
     public void update() {
         Calendar date = Calendar.getInstance();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        String Tiempo = (String) formatter.format(new Date());
         hour = date.get(Calendar.HOUR);
         minute = date.get(Calendar.MINUTE);
         oldSecond = second;
@@ -26,12 +36,36 @@ public class Model extends Observable {
             setChanged();
             notifyObservers();
         }
-        /*
-    final PriorityQueue<TimeNumber> q;
+        //System.out.println(hour+" "+minute+" "+second);
+        //System.out.println(Tiempo);
+        final PriorityQueue<TimeNumber> q;
         q = ClockQueue.ClockQueueInstance;
-    System.out.println(q);
+        try {
+            String timeHead = q.head().getTime();
+            String rawTiempo = Tiempo.replaceAll(":","");
+            String rawTime = timeHead.replaceAll(":","");
+            int convertedTiempo = Integer.valueOf(rawTiempo);
+            int convertedTime = Integer.valueOf(rawTime);
+            if (convertedTiempo == convertedTime) {
+                JOptionPane.showMessageDialog(null, "The time is now! Alarm for : "+timeHead+"!");
+                String removedAlarm = q.head().getTime();
+                    System.out.println("Removing " + removedAlarm + " from the head of the queue");
+                    q.remove();
+            
+            }
+            //System.out.println(convertedTime);
+            //System.out.println(convertedTiempo);
+            
+        } catch (QueueUnderflowException ex) {
+            //System.out.println("None");
+        }
+        /*
+            final PriorityQueue<TimeNumber> q;
+            q = ClockQueue.ClockQueueInstance;
+            System.out.println(q);
         */
     }
+    
     
     
 }
