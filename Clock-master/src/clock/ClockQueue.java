@@ -24,11 +24,12 @@ public class ClockQueue<T> implements PriorityQueue<T> {
      *
      * @param size
      */
-    public ClockQueue(int size) {
+    public ClockQueue(int size) { 
         storage = new Object[size];
         capacity = size;
         tailIndex = -1;
     }
+    public static ClockQueue ClockQueueInstance = new ClockQueue(8);
 
     @Override
     public T head() throws QueueUnderflowException {

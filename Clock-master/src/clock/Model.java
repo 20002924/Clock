@@ -26,6 +26,11 @@ public class Model extends Observable {
             setChanged();
             notifyObservers();
         }
+        /*
+    final PriorityQueue<TimeNumber> q;
+        q = ClockQueue.ClockQueueInstance;
+    System.out.println(q);
+        */
     }
     
     

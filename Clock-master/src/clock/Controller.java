@@ -16,6 +16,7 @@ public class Controller {
         model = m;
         view = v;
         
+        
         listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 model.update();

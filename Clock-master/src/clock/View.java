@@ -26,11 +26,17 @@ public class View implements Observer {
     JPanel panel2; //rename
     JLabel label; // rename
     JFormattedTextField input; //rename
+    JFormattedTextField currentTimeField;
     ActionListener listener;
     ActionListener timerselect;
     private Object selectedTime;
     
+    
+    
     public View(Model model) {
+        
+        final PriorityQueue<TimeNumber> q;
+        q = ClockQueue.ClockQueueInstance;
         JFrame frame = new JFrame();
         panel = new ClockPanel(model);
         //frame.setContentPane(panel);
@@ -54,8 +60,7 @@ public class View implements Observer {
         button.addActionListener(new ActionListener() {
             PriorityQueue<TimeNumber> q;
         Scanner stdin = new Scanner(System.in);
-
-    public void actionPerformed(ActionEvent ae) {
+        public void actionPerformed(ActionEvent ae) {
 
         System.out.println("Welcome to the Priority Queue manager.");
                 q = new ClockQueue<>(8);
@@ -128,25 +133,52 @@ public class View implements Observer {
         pane.add(button, BorderLayout.LINE_START);
         button.addActionListener(new ActionListener() {
             
-            PriorityQueue<TimeNumber> q;
+            
         Scanner stdin = new Scanner(System.in);
 
             public void actionPerformed(ActionEvent stg) {
-                System.out.println("Welcome to the Priority Queue manager.");
-                q = new ClockQueue<>(8);
+                System.out.println("Welcome to the background code.");
+                
+                
                 System.out.println("Using a sorted array.");
-                selectedTime = input.getValue();
+                selectedTime = input.getText();
+                String alarmTime = (String) selectedTime;
+                currentTimeField.setValue(new Date());
+                String selectedTimeCurrent = currentTimeField.getText();
+                String presentTime = (String) selectedTimeCurrent;
+                String currentTime = presentTime.replaceAll(":","");
+                int nowTime = Integer.valueOf(currentTime);
                 JOptionPane.showMessageDialog(null, "Alarm for : "+selectedTime);
-                String inputnum = stdin.nextLine();
-                String time = inputnum.substring(2, inputnum.lastIndexOf(' '));
+                TimeNumber timenumber = new TimeNumber(alarmTime);
+                String baseTime = alarmTime.replaceAll(":","");
+                int namedTime = Integer.valueOf(baseTime);
+                int priority = namedTime - nowTime;
+                System.out.println("Adding " + timenumber.getTime() + " with priority " + priority);
+                try {
+                q.add(timenumber, priority);
+                } catch (QueueOverflowException e) {
+                System.out.println("Add operation failed: " + e);
+                }
+                
+                /*
+                String input2 = stdin.nextLine();
+                String time = input2.substring(2, input2.lastIndexOf(' '));
                 TimeNumber timenumber = new TimeNumber(time);
-                int priority = Integer.parseInt(inputnum.substring(inputnum.lastIndexOf(' ') + 1));
+                int priority = Integer.parseInt(input2.substring(input2.lastIndexOf(' ') + 1));
                 System.out.println("Adding " + timenumber.getTime() + " with priority " + priority);
                 try {
                     q.add(timenumber, priority);
                 } catch (QueueOverflowException e) {
                     System.out.println("Add operation failed: " + e);
                 }
+                */
+                try {
+                    String time2 = q.head().getTime();
+                    System.out.println("The timenumber at the head of the queue is " + time2);
+                } catch (QueueUnderflowException e) {
+                    System.out.println("Can't get head of queue: " + e);
+                }
+                System.out.println(q);
             }
         });
          
@@ -167,6 +199,7 @@ public class View implements Observer {
     input = new JFormattedTextField(clockTime);
     input.setValue(new Date());
     input.setColumns(20);
+    currentTimeField = new JFormattedTextField(clockTime);
     
     panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     panel2.add(label);
