@@ -29,9 +29,14 @@ public class View implements Observer {
     JLabel label; // rename
     JFormattedTextField input; //rename
     JFormattedTextField currentTimeField;
+    static JList alarmList;
+    static JScrollPane alarmListModel;
     ActionListener listener;
     ActionListener timerselect;
     private Object selectedTime;
+    static String alarmListDeletion;
+    static JButton silentRemovalButton = new JButton("You're not supposed to see this.");
+    
     
     
     
@@ -157,12 +162,15 @@ public class View implements Observer {
                 TimeNumber timenumber = new TimeNumber(alarmTime);
                 String baseTime = alarmTime.replaceAll(":","");
                 int namedTime = Integer.valueOf(baseTime);
-                int priority = namedTime - nowTime;
+                //int priority = namedTime - nowTime;
                 //int priority = nowTime - namedTime;
+                int priority = namedTime;
+                /*
                 if (priority < 0) {
                     priority = priority + 240000;
                     priority = Math.abs(priority);
                 }
+                */
                 System.out.println("Adding " + timenumber.getTime() + " with priority " + priority);
                 try {
                 q.add(timenumber, priority);
@@ -227,11 +235,14 @@ public class View implements Observer {
                 String baseTime = newAlarm.replaceAll(":","");
                 int nowTime = Integer.valueOf(currentTime);
                 int namedTime = Integer.valueOf(baseTime);
-                int priorityReplace = namedTime - nowTime;
+                //int priorityReplace = namedTime - nowTime;
+                /*
                 if (priorityReplace < 0) {
                     priorityReplace = priorityReplace + 240000;
                     priorityReplace = Math.abs(priorityReplace);
                 }
+                */
+                int priorityReplace = namedTime;
                 try {
                     q.add(timenumberReplace, priorityReplace);
                     alarmListModel.addElement(newAlarm);
@@ -241,9 +252,48 @@ public class View implements Observer {
                 
             }
         });
-        JButton clockResetButton = new JButton("Refresh Current Time");
-        editAlarm.add(clockResetButton, BorderLayout.LINE_END);
-        // Make it change short time and current time as well as refresh priorities.
+        
+        silentRemovalButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent delc) {
+                //JOptionPane.showMessageDialog(null, "Alarm for : "+selectedEditAlarm);
+                Object selectedDeletionAlarm = alarmListDeletion;
+                JOptionPane.showMessageDialog(editAlarm, "Deleting alarm for: "+alarmListDeletion);
+                String removalAlarm = String.valueOf(alarmListDeletion);
+                String removalPenulAlarm = removalAlarm.replaceAll(":","");
+                int removalFinalAlarm = Integer.valueOf(removalPenulAlarm);
+                try {
+                    q.removeEdit(removalFinalAlarm);
+                    System.out.println("Removed Alarm: "+selectedDeletionAlarm);
+                    alarmListModel.removeElement(selectedDeletionAlarm);
+                } catch (QueueUnderflowException ex) {
+                    System.out.println("That wasn't supposed to happen. Couldn't remove alarm: "+removalFinalAlarm);
+                }
+                
+            }
+        });
+        
+        
+        JButton clockDeleteButton = new JButton("Delete Alarm");
+        editAlarm.add(clockDeleteButton, BorderLayout.LINE_END);
+        clockDeleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent delc) {
+                Object selectedEditAlarm = alarmList.getSelectedValue();
+                //JOptionPane.showMessageDialog(null, "Alarm for : "+selectedEditAlarm);
+                
+                JOptionPane.showMessageDialog(editAlarm, "Deleting alarm for: "+selectedEditAlarm);
+                String removalTime = String.valueOf(selectedEditAlarm);
+                String removalPenul = removalTime.replaceAll(":","");
+                int removalFinal = Integer.valueOf(removalPenul);
+                try {
+                    q.removeEdit(removalFinal);
+                    System.out.println("Removed Alarm: "+selectedEditAlarm);
+                    alarmListModel.removeElement(selectedEditAlarm);
+                } catch (QueueUnderflowException ex) {
+                    System.out.println("That wasn't supposed to happen. Couldn't remove alarm.");
+                }
+                
+            }
+        });
         
         
         //reformat all this code to be different
@@ -265,6 +315,11 @@ public class View implements Observer {
         
         frame.pack();
         frame.setVisible(true);
+    }
+    
+    public static void removeFromAlarm(Object removedFromList) {
+    View.alarmListDeletion = String.valueOf(removedFromList);
+        View.silentRemovalButton.doClick();
     }
     
     public void update(Observable o, Object arg) {

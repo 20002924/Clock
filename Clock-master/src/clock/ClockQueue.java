@@ -40,6 +40,35 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         }
     }
     
+    @Override
+    public T headEquals(int headTime) throws QueueUnderflowException {
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            int i = tailIndex;
+            while ( i > 0 && ((PriorityItem<T>) storage[i]).getPriority() != headTime ) {
+                i = i - 1;
+            }
+            
+            return ((PriorityItem<T>) storage[i]).getItem();
+        }
+    }
+    
+    @Override
+    public int headRetrieval(int samePriority) throws QueueUnderflowException {
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            int i = tailIndex;
+            while ( i > 0 && ((PriorityItem<T>) storage[i]).getPriority() != samePriority ) {
+                i = i - 1;
+            }
+            
+            return ((PriorityItem<T>) storage[i]).getPriority();
+        }
+    }
+    
+    @Override
     public int headPriority() throws QueueUnderflowException {
         if (isEmpty()) {
             throw new QueueUnderflowException();
@@ -82,19 +111,19 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
+            
             int tail = 0;
             int i = tailIndex;
             int loopTime = ((PriorityItem<T>) storage[i]).getPriority();
             
             
             
-            while (i > 0 && loopTime != editRemoval) {
-                if (((PriorityItem<T>) storage[i]).getPriority() > ((PriorityItem<T>) storage[tail]).getPriority()) {
+            while (i > 0) {
+                if (loopTime == editRemoval) {
                     tail = i;
                 }
                 i = i - 1;
             }
-            
             storage[tail] = storage[tailIndex];
             tailIndex = tailIndex - 1;
         }

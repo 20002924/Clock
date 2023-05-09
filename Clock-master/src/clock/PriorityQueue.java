@@ -35,6 +35,24 @@ public interface PriorityQueue<T> {
     public T head() throws QueueUnderflowException;
     
     /**
+     * The item with matching time.
+     *
+     * @param headTime
+     * @return The item with the highest priority
+     * @throws QueueUnderflowException
+     */
+    public T headEquals(int headTime) throws QueueUnderflowException;
+    
+    /**
+     * The item's priority with matching time.
+     *
+     * @param samePriority
+     * @return The item with the highest priority
+     * @throws QueueUnderflowException
+     */
+    public int headRetrieval(int samePriority) throws QueueUnderflowException;
+    
+    /**
      * The priority of the chosen priority item. Throw an exception if it's empty.
      *
      * @return The item with the highest priority
