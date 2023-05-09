@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.Format;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFormattedTextField;
@@ -37,6 +39,9 @@ public class View implements Observer {
         
         final PriorityQueue<TimeNumber> q;
         q = ClockQueue.ClockQueueInstance;
+        
+        final DefaultListModel alarmListModel = new DefaultListModel();
+        
         JFrame frame = new JFrame();
         panel = new ClockPanel(model);
         //frame.setContentPane(panel);
@@ -129,7 +134,7 @@ public class View implements Observer {
         panel.setPreferredSize(new Dimension(200, 200));
         pane.add(panel, BorderLayout.CENTER);
          
-        button = new JButton("Button 3 (LINE_START)");
+        button = new JButton("Add Alarm");
         pane.add(button, BorderLayout.LINE_START);
         button.addActionListener(new ActionListener() {
             
@@ -143,7 +148,7 @@ public class View implements Observer {
                 System.out.println("Using a sorted array.");
                 selectedTime = input.getText();
                 String alarmTime = (String) selectedTime;
-                currentTimeField.setValue(new Date());
+                //currentTimeField.setValue(new Date());
                 String selectedTimeCurrent = currentTimeField.getText();
                 String presentTime = (String) selectedTimeCurrent;
                 String currentTime = presentTime.replaceAll(":","");
@@ -161,6 +166,7 @@ public class View implements Observer {
                 System.out.println("Adding " + timenumber.getTime() + " with priority " + priority);
                 try {
                 q.add(timenumber, priority);
+                alarmListModel.addElement(timenumber);
                 } catch (QueueOverflowException e) {
                 System.out.println("Add operation failed: " + e);
                 }
@@ -186,17 +192,59 @@ public class View implements Observer {
                 System.out.println(q);
             }
         });
-         
-        button = new JButton("5 (LINE_END)");
-        pane.add(button, BorderLayout.LINE_END);
-        button.addActionListener(new ActionListener() {
-
+        
+        final JPanel editAlarm = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton editButton = new JButton("Edit Alarm");
+        editAlarm.add(editButton);
+        pane.add(editAlarm, BorderLayout.LINE_END);
+        final JList alarmList = new JList(alarmListModel);
+        JScrollPane alarmScrollList = new JScrollPane(alarmList);
+        alarmScrollList.setPreferredSize(new Dimension(150, 100));
+        //editAlarm.add(alarmList);
+        editAlarm.add(alarmScrollList);
+        editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent stg) {
-                System.out.println("Test:");
-                selectedTime = input.getValue();
-                JOptionPane.showMessageDialog(null, "Alarm for : "+selectedTime);
+                Object selectedEditAlarm = alarmList.getSelectedValue();
+                //JOptionPane.showMessageDialog(null, "Alarm for : "+selectedEditAlarm);
+                
+                String newAlarm = JOptionPane.showInputDialog(editAlarm, "Changing alarm for: "+selectedEditAlarm);
+                System.out.println("New Alarm for: " + newAlarm);
+                String removalTime = String.valueOf(selectedEditAlarm);
+                String removalPenul = removalTime.replaceAll(":","");
+                int removalFinal = Integer.valueOf(removalPenul);
+                try {
+                    q.removeEdit(removalFinal);
+                    System.out.println("Removed Alarm: "+selectedEditAlarm);
+                    alarmListModel.removeElement(selectedEditAlarm);
+                } catch (QueueUnderflowException ex) {
+                    System.out.println("That wasn't supposed to happen. Couldn't remove alarm.");
+                }
+                TimeNumber timenumberReplace = new TimeNumber(newAlarm);
+                //currentTimeField.setValue(new Date());
+                String selectedTimeCurrent = currentTimeField.getText();
+                String presentTime = (String) selectedTimeCurrent;
+                String currentTime = presentTime.replaceAll(":","");
+                String baseTime = newAlarm.replaceAll(":","");
+                int nowTime = Integer.valueOf(currentTime);
+                int namedTime = Integer.valueOf(baseTime);
+                int priorityReplace = namedTime - nowTime;
+                if (priorityReplace < 0) {
+                    priorityReplace = priorityReplace + 240000;
+                    priorityReplace = Math.abs(priorityReplace);
+                }
+                try {
+                    q.add(timenumberReplace, priorityReplace);
+                    alarmListModel.addElement(newAlarm);
+                } catch (QueueOverflowException ex) {
+                    System.out.println("That wasn't supposed to happen. Couldn't add new alarm.");
+                }
+                
             }
         });
+        JButton clockResetButton = new JButton("Refresh Current Time");
+        editAlarm.add(clockResetButton, BorderLayout.LINE_END);
+        // Make it change short time and current time as well as refresh priorities.
+        
         
         //reformat all this code to be different
         Format clockTime = DateFormat.getTimeInstance(DateFormat.MEDIUM);
@@ -205,6 +253,7 @@ public class View implements Observer {
     input.setValue(new Date());
     input.setColumns(20);
     currentTimeField = new JFormattedTextField(clockTime);
+    currentTimeField.setValue(new Date());
     
     panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     panel2.add(label);

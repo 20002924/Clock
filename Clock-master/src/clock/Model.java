@@ -42,6 +42,7 @@ public class Model extends Observable {
         q = ClockQueue.ClockQueueInstance;
         try {
             String timeHead = q.head().getTime();
+            int priorityHead = q.headPriority();
             String rawTiempo = Tiempo.replaceAll(":","");
             String rawTime = timeHead.replaceAll(":","");
             int convertedTiempo = Integer.valueOf(rawTiempo);
@@ -51,13 +52,33 @@ public class Model extends Observable {
                 String removedAlarm = q.head().getTime();
                     System.out.println("Removing " + removedAlarm + " from the head of the queue");
                     q.remove();
+                    //q.removeEdit(convertedTiempo);
+                    TimeNumber timenumberExpand = new TimeNumber(timeHead);
+                    int priorityExpand = priorityHead + 240000;
+                    //priorityExpand = Math.abs(priorityExpand);
+                    q.add(timenumberExpand, priorityExpand);
+                    System.out.println("Adding " + timenumberExpand.getTime() + " with priority " + priorityExpand);
             
             }
+            else if (convertedTiempo > convertedTime) {
+                JOptionPane.showMessageDialog(null, "Alarm expired for : "+timeHead+"!");
+                String removedAlarm = q.head().getTime();
+                    System.out.println("Removing " + removedAlarm + " from the head of the queue");
+                    q.remove();
+                    TimeNumber timenumberExpand = new TimeNumber(timeHead);
+                    int priorityExpand = priorityHead + 240000;
+                    //priorityExpand = Math.abs(priorityExpand);
+                    q.add(timenumberExpand, priorityExpand);
+            
+            }
+            
             //System.out.println(convertedTime);
             //System.out.println(convertedTiempo);
             
         } catch (QueueUnderflowException ex) {
             //System.out.println("None");
+        } catch (QueueOverflowException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
         /*
             final PriorityQueue<TimeNumber> q;

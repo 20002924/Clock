@@ -39,6 +39,14 @@ public class ClockQueue<T> implements PriorityQueue<T> {
             return ((PriorityItem<T>) storage[0]).getItem();
         }
     }
+    
+    public int headPriority() throws QueueUnderflowException {
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            return ((PriorityItem<T>) storage[0]).getPriority();
+        }
+    }
 
     @Override
     public void add(T item, int priority) throws QueueOverflowException {
@@ -66,6 +74,28 @@ public class ClockQueue<T> implements PriorityQueue<T> {
             for (int i = 0; i < tailIndex; i++) {
                 storage[i] = storage[i + 1];
             }
+            tailIndex = tailIndex - 1;
+        }
+    }
+    
+    public void removeEdit(int editRemoval) throws QueueUnderflowException {
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            int tail = 0;
+            int i = tailIndex;
+            int loopTime = ((PriorityItem<T>) storage[i]).getPriority();
+            
+            
+            
+            while (i > 0 && loopTime != editRemoval) {
+                if (((PriorityItem<T>) storage[i]).getPriority() > ((PriorityItem<T>) storage[tail]).getPriority()) {
+                    tail = i;
+                }
+                i = i - 1;
+            }
+            
+            storage[tail] = storage[tailIndex];
             tailIndex = tailIndex - 1;
         }
     }

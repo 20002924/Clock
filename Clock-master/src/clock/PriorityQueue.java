@@ -33,6 +33,14 @@ public interface PriorityQueue<T> {
      * @throws QueueUnderflowException
      */
     public T head() throws QueueUnderflowException;
+    
+    /**
+     * The priority of the chosen priority item. Throw an exception if it's empty.
+     *
+     * @return The item with the highest priority
+     * @throws QueueUnderflowException
+     */
+    public int headPriority() throws QueueUnderflowException;
 
     /**
      * Remove the highest priority item from the queue. Throw an exception if
@@ -43,10 +51,20 @@ public interface PriorityQueue<T> {
     public void remove() throws QueueUnderflowException;
 
     /**
+     * Remove the named item from editing.
+     *
+     * @param editRemoval
+     * @throws QueueUnderflowException
+     */
+    public void removeEdit(int editRemoval) throws QueueUnderflowException;
+    
+    /**
      * Is the queue empty?
      *
      * @return True if there are no items stored, otherwise False
      */
+    
+    
     public boolean isEmpty();
 
     @Override
