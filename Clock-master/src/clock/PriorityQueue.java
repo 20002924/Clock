@@ -53,6 +53,15 @@ public interface PriorityQueue<T> {
     public int headRetrieval(int samePriority) throws QueueUnderflowException;
     
     /**
+     * Find the current alarm from priority.
+     *
+     * @param currentPriority
+     * @return The item with the highest priority
+     * @throws QueueUnderflowException
+     */
+    public int headAlarmRetrieval(int currentPriority) throws QueueUnderflowException;
+    
+    /**
      * The priority of the chosen priority item. Throw an exception if it's empty.
      *
      * @return The item with the highest priority

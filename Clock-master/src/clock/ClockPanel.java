@@ -25,6 +25,8 @@ public class ClockPanel extends JPanel {
         Graphics2D gg = (Graphics2D) g;
         int x0 = bounds.width / 2;
         int y0 = bounds.height / 2;
+        int a0 = bounds.width / 2;
+        int b0 = bounds.height / 2;
         
         int size = Math.min(x0, y0);
         //gg.translate(x0, y0);
@@ -85,6 +87,15 @@ public class ClockPanel extends JPanel {
         double y1 = y0 - radius * Math.sin(theta);
         gg.draw(new Line2D.Double(x0, y0, x1, y1));
         
+        // Draw the alarm hour hand
+        gg.setColor(Color.orange);
+        gg.setStroke(new BasicStroke(2.0f));
+        theta = (90 - (model.alarmHour + model.alarmMinute / 60.0) * 30) / (180 / Math.PI);
+        radius = 0.5 * size;
+        double a1 = a0 + radius * Math.cos(theta);
+        double b1 = b0 - radius * Math.sin(theta);
+        gg.draw(new Line2D.Double(a0, b0, a1, b1));
+        
         // Draw the minute hand
         gg.setStroke(new BasicStroke(1.1f));
         theta = (90 - (model.minute + model.second / 60.0) * 6) / (180 / Math.PI);
@@ -93,6 +104,15 @@ public class ClockPanel extends JPanel {
         y1 = y0 - radius * Math.sin(theta);
         gg.draw(new Line2D.Double(x0, y0, x1, y1));
         
+        // Draw the alarm minute hand
+        gg.setColor(Color.green);
+        gg.setStroke(new BasicStroke(1.1f));
+        theta = (90 - (model.alarmMinute + model.alarmSecond / 60.0) * 6) / (180 / Math.PI);
+        radius = 0.75 * size;
+        a1 = a0 + radius * Math.cos(theta);
+        b1 = b0 - radius * Math.sin(theta);
+        gg.draw(new Line2D.Double(a0, b0, a1, b1));
+        
         // Draw the second hand
         gg.setColor(Color.red);
         gg.setStroke(new BasicStroke(0));
@@ -100,5 +120,13 @@ public class ClockPanel extends JPanel {
         x1 = x0 + radius * Math.cos(theta);
         y1 = y0 - radius * Math.sin(theta);
         gg.draw(new Line2D.Double(x0, y0, x1, y1));
+        
+        // Draw the alarm second hand
+        gg.setColor(Color.magenta);
+        gg.setStroke(new BasicStroke(0));
+        theta = (90 - model.alarmSecond * 6) / (180 / Math.PI);
+        a1 = a0 + radius * Math.cos(theta);
+        b1 = b0 - radius * Math.sin(theta);
+        gg.draw(new Line2D.Double(a0, b0, a1, b1));
     }
 }

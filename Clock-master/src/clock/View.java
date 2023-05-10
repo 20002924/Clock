@@ -25,9 +25,9 @@ import javax.swing.JTextField;
 public class View implements Observer {
     
     ClockPanel panel;
-    JPanel panel2; //rename
-    JLabel label; // rename
-    JFormattedTextField input; //rename
+    JPanel timeInputPanel;
+    JLabel timeLabel;
+    JFormattedTextField timeInput;
     JFormattedTextField currentTimeField;
     static JList alarmList;
     static JScrollPane alarmListModel;
@@ -65,85 +65,31 @@ public class View implements Observer {
         
         Container pane = frame.getContentPane();
         
-        JButton button = new JButton("Button 1 (PAGE_START)");
-        pane.add(button, BorderLayout.PAGE_START);
+        //JButton button = new JButton("Button 1 (PAGE_START)");
+        JPanel panelPrimer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        Format clockTimePrimer = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+        JFormattedTextField currentAlarm = new JFormattedTextField(clockTimePrimer);
+        JLabel currentAlarmLabel = new JLabel("Current Alarm:");
+        currentAlarm.setColumns(20);
+        panelPrimer.add(currentAlarmLabel, BorderLayout.CENTER);
+        panelPrimer.add(currentAlarm, BorderLayout.CENTER);
+        pane.add(panelPrimer, BorderLayout.PAGE_START);
+        
+        /*
         button.addActionListener(new ActionListener() {
             PriorityQueue<TimeNumber> q;
         Scanner stdin = new Scanner(System.in);
         public void actionPerformed(ActionEvent ae) {
-
-        System.out.println("Welcome to the Priority Queue manager.");
-                q = new ClockQueue<>(8);
-                System.out.println("Using a sorted array.");
-                
-
-        System.out.println("Enter commands at the prompt.");
-        System.out.println("A <time> <priority> adds a timenumber to the queue.");
-        System.out.println("H displays the time of the timenumber at the head of the queue");
-        System.out.println("R removes the timenumber at the head of the queue");
-        System.out.println("E checks if the queue is empty");
-        System.out.println("P prints the whole queue");
-        System.out.println("Q quits from the system");
-
-        System.out.print("> ");
-        String input = stdin.nextLine();
-
-        while (!input.toLowerCase().equals("q")) {
-            if (input.toLowerCase().charAt(0) == 'a') {
-
-                String time = input.substring(2, input.lastIndexOf(' '));
-                TimeNumber timenumber = new TimeNumber(time);
-                int priority = Integer.parseInt(input.substring(input.lastIndexOf(' ') + 1));
-                System.out.println("Adding " + timenumber.getTime() + " with priority " + priority);
-                try {
-                    q.add(timenumber, priority);
-                } catch (QueueOverflowException e) {
-                    System.out.println("Add operation failed: " + e);
-                }
-            } else if (input.toLowerCase().charAt(0) == 'h') {
-
-                try {
-                    String time = q.head().getTime();
-                    System.out.println("The timenumber at the head of the queue is " + time);
-                } catch (QueueUnderflowException e) {
-                    System.out.println("Can't get head of queue: " + e);
-                }
-            } else if (input.toLowerCase().charAt(0) == 'r') {
-
-                try {
-                    String time = q.head().getTime();
-                    System.out.println("Removing " + time + " from the head of the queue");
-                    q.remove();
-                } catch (QueueUnderflowException e) {
-                    System.out.println("Can't remove head of queue: " + e);
-                }
-            } else if (input.toLowerCase().charAt(0) == 'e') {
-
-                if (q.isEmpty()) {
-                    System.out.println("The queue is empty");
-                } else {
-                    System.out.println("The queue is NOT empty");
-                }
-            } else if (input.toLowerCase().charAt(0) == 'p') {
-
-
-                System.out.println(q);
-            }
-            System.out.print("> ");
-            input = stdin.nextLine();
-        }
-        System.out.println("Bye");
-    }
-        });
+            
+        }});
+        */
          
         panel.setPreferredSize(new Dimension(200, 200));
         pane.add(panel, BorderLayout.CENTER);
          
-        button = new JButton("Add Alarm");
+        JButton button = new JButton("Add Alarm");
         pane.add(button, BorderLayout.LINE_START);
         button.addActionListener(new ActionListener() {
-            
-            
         Scanner stdin = new Scanner(System.in);
 
             public void actionPerformed(ActionEvent stg) {
@@ -151,7 +97,7 @@ public class View implements Observer {
                 
                 
                 System.out.println("Using a sorted array.");
-                selectedTime = input.getText();
+                selectedTime = timeInput.getText();
                 String alarmTime = (String) selectedTime;
                 //currentTimeField.setValue(new Date());
                 String selectedTimeCurrent = currentTimeField.getText();
@@ -174,7 +120,7 @@ public class View implements Observer {
                 System.out.println("Adding " + timenumber.getTime() + " with priority " + priority);
                 try {
                 q.add(timenumber, priority);
-                alarmListModel.addElement(timenumber);
+                alarmListModel.addElement(alarmTime);
                 } catch (QueueOverflowException e) {
                 System.out.println("Add operation failed: " + e);
                 }
@@ -223,7 +169,7 @@ public class View implements Observer {
                 try {
                     q.removeEdit(removalFinal);
                     System.out.println("Removed Alarm: "+selectedEditAlarm);
-                    alarmListModel.removeElement(selectedEditAlarm);
+                    alarmListModel.removeElement(removalTime);
                 } catch (QueueUnderflowException ex) {
                     System.out.println("That wasn't supposed to happen. Couldn't remove alarm.");
                 }
@@ -295,20 +241,21 @@ public class View implements Observer {
             }
         });
         
+        JButton upcomingAlarmButton = new JButton("Current Alarm");
+        editAlarm.add(upcomingAlarmButton, BorderLayout.PAGE_END);
         
-        //reformat all this code to be different
         Format clockTime = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-    label = new JLabel("Short time:");
-    input = new JFormattedTextField(clockTime);
-    input.setValue(new Date());
-    input.setColumns(20);
-    currentTimeField = new JFormattedTextField(clockTime);
-    currentTimeField.setValue(new Date());
+        timeLabel = new JLabel("Short time:");
+        timeInput = new JFormattedTextField(clockTime);
+        timeInput.setValue(new Date());
+        timeInput.setColumns(20);
+        currentTimeField = new JFormattedTextField(clockTime);
+        currentTimeField.setValue(new Date());
     
-    panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    panel2.add(label);
-    panel2.add(input);
-    pane.add(panel2, BorderLayout.PAGE_END);
+        timeInputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        timeInputPanel.add(timeLabel);
+        timeInputPanel.add(timeInput);
+        pane.add(timeInputPanel, BorderLayout.PAGE_END);
     
         
         // End of borderlayout code

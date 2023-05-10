@@ -17,6 +17,9 @@ public class Model extends Observable {
     int hour = 0;
     int minute = 0;
     int second = 0;
+    int alarmHour = 0;
+    int alarmMinute = 0;
+    int alarmSecond = 0;
     
     int oldSecond = 0;
     
@@ -52,11 +55,13 @@ public class Model extends Observable {
             TimeNumber headTime = q.headEquals(convertedTiempo);
             int checkSamePriority = q.headRetrieval(convertedTiempo);
             if (convertedTiempo == checkSamePriority) {
-                JOptionPane.showMessageDialog(null, "The time is now! Alarm for : "+headTime+"!");
+                //JOptionPane.showMessageDialog(null, "The time is now! Alarm for : "+headTime+"!");
                 int alarmQueryResult = JOptionPane.showConfirmDialog(null,"The time is now! Alarm for : "+headTime+"!"+" Do you want to remove this alarm?", "Alarm Query",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (alarmQueryResult == JOptionPane.YES_OPTION){
                     String chosenDeletedAlarm = String.valueOf(headTime);
                     System.out.println("Removing " + chosenDeletedAlarm + " from the head of the queue");
+                    //int nextAlarm = q.headAlarmRetrieval(convertedTiempo);
+                    //System.out.println("The next in queue is: " + nextAlarm);
                     View.removeFromAlarm(headTime);
                 }
                 else if (alarmQueryResult == JOptionPane.NO_OPTION){
@@ -65,6 +70,33 @@ public class Model extends Observable {
                 else {
                     System.out.println("Neither selected.");
                 }
+                int newAlarmPriority = q.headAlarmRetrieval(convertedTiempo);
+                System.out.println("Next in the queue is: " + newAlarmPriority);
+                String newAlarmName = String.valueOf(newAlarmPriority);
+                if (newAlarmName.length() == 6) {
+                int trio1 = Integer.parseInt(newAlarmName.substring(0, 2));
+                int trio2 = Integer.parseInt(newAlarmName.substring(2, 4));
+                int trio3 = Integer.parseInt(newAlarmName.substring(4, 6));
+                System.out.println("Testing: "+trio1+" "+trio2+" "+trio3);
+                Calendar alarmDate = Calendar.getInstance();
+                alarmDate.set(Calendar.SECOND, trio3);
+                alarmDate.set(Calendar.MINUTE, trio2);
+                alarmDate.set(Calendar.HOUR, trio1);
+                alarmHour = alarmDate.get(Calendar.HOUR);
+                alarmMinute = alarmDate.get(Calendar.MINUTE);
+                alarmSecond = alarmDate.get(Calendar.SECOND);
+                }
+                if(newAlarmName.length() == 4) {
+                int trio2 = Integer.parseInt(newAlarmName.substring(2, 4));
+                int trio3 = Integer.parseInt(newAlarmName.substring(4, 6));
+                System.out.println("Testing: "+" "+trio2+" "+trio3);
+                }
+                else {
+                System.out.println("How'd this happen?");
+                } 
+                //String fixInput = newAlarmName.replaceAll("..(?!$)", "$0:");
+                //System.out.println("Testing: "+trio1+" "+trio2+" "+trio3);
+                
                 /*
                 String removedAlarm = q.head().getTime();
                     System.out.println("Removing " + removedAlarm + " from the head of the queue");
@@ -109,6 +141,7 @@ public class Model extends Observable {
             System.out.println(q);
         */
     }
+    
     
     
     
