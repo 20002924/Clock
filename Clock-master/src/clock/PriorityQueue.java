@@ -55,6 +55,15 @@ public interface PriorityQueue<T> {
     /**
      * Find the current alarm from priority.
      *
+     * @param searchHead
+     * @return The item with the highest priority
+     * @throws QueueUnderflowException
+     */
+    public int headCurrentRetrieval(int searchHead) throws QueueUnderflowException;
+    
+    /**
+     * Find the current alarm from priority.
+     *
      * @param currentPriority
      * @return The item with the highest priority
      * @throws QueueUnderflowException
@@ -109,4 +118,20 @@ public interface PriorityQueue<T> {
      * For example: [(Fred, 10), (Mabel, 15), (Jane, 5)]
      */
     public String toString();
+    
+    
+    /**
+     * A string representation used to save the queue to file.
+     *
+     * This should be formatted as a list, in square brackets.
+     *
+     * Each item should be shown as an ordered pair in parentheses together with
+     * its priority.
+     *
+     * The items may be listed in any order. In particular there is no
+     * requirement that the item returned by head() should be listed first.
+     *
+     * For example: [(Fred, 10), (Mabel, 15), (Jane, 5)]
+     */
+    public String toStringSave();
 }

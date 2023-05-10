@@ -69,6 +69,24 @@ public class ClockQueue<T> implements PriorityQueue<T> {
     }
     
     @Override
+    public int headCurrentRetrieval(int searchHead) throws QueueUnderflowException {
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            int i = tailIndex;
+            int n = tailIndex;
+            while ( i > 0 && ((PriorityItem<T>) storage[i]).getPriority() > searchHead ) {
+                i = i - 1;
+                if (((PriorityItem<T>) storage[i]).getPriority() > searchHead ) {
+                n = i;
+            }
+            }
+            
+            return ((PriorityItem<T>) storage[n]).getPriority();
+        }
+    }
+    
+    @Override
     public int headAlarmRetrieval(int currentPriority) throws QueueUnderflowException {
         if (isEmpty()) {
             throw new QueueUnderflowException();
@@ -133,7 +151,7 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         } else {
             
             int tail = 0;
-            //int i = tailIndex;
+            int i = tailIndex;
             
             
             
@@ -146,12 +164,22 @@ public class ClockQueue<T> implements PriorityQueue<T> {
             }
             */
             
+            /*
             for (int i = 0; i < tailIndex; i++) {
                 int loopTime = ((PriorityItem<T>) storage[i]).getPriority();
                 if (loopTime == editRemoval) {
                     tail = i;
                 }
                 storage[i] = storage[i + 1];
+            }
+            */
+            
+            while (i > 0) {
+                int loopTime = ((PriorityItem<T>) storage[i]).getPriority();
+                if (loopTime == editRemoval) {
+                    tail = i;
+                }
+                i = i - 1;
             }
             
             storage[tail] = storage[tailIndex];
@@ -172,6 +200,19 @@ public class ClockQueue<T> implements PriorityQueue<T> {
                 result = result + ", ";
             }
             result = result + storage[i];
+        }
+        result = result + "]";
+        return result;
+    }
+    
+    @Override
+    public String toStringSave() {
+        String result = "[";
+        for (int i = 0; i <= tailIndex; i++) {
+            if (i > 0) {
+                result = result + ", ";
+            }
+            result = result + ((PriorityItem<T>) storage[i]).getItem();
         }
         result = result + "]";
         return result;
