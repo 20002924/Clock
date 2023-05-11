@@ -35,48 +35,48 @@ public interface PriorityQueue<T> {
     public T head() throws QueueUnderflowException;
     
     /**
-     * The item with matching time.
+     * Finds an item with matching time to the input.
      *
      * @param headTime
-     * @return The item with the highest priority
+     * @return The item with matching time
      * @throws QueueUnderflowException
      */
     public T headEquals(int headTime) throws QueueUnderflowException;
     
     /**
-     * The item's priority with matching time.
+     * Finds and returns the item's priority if it matches the input.
      *
      * @param samePriority
-     * @return The item with the highest priority
+     * @return Matching item's priority.
      * @throws QueueUnderflowException
      */
     public int headRetrieval(int samePriority) throws QueueUnderflowException;
     
     /**
-     * Find the current alarm from priority.
+     * Searches for the next biggest priority/ next priority alarm.
      *
      * @param searchHead
-     * @return The item with the highest priority
+     * @return The next item priority bigger than input.
      * @throws QueueUnderflowException
      */
     public int headCurrentRetrieval(int searchHead) throws QueueUnderflowException;
     
     /**
-     * Find the current alarm from priority.
+     * Searches for the next biggest priority/ next priority alarm. Deprecated version.
      *
      * @param currentPriority
-     * @return The item with the highest priority
+     * @return The next item priority bigger than input.
      * @throws QueueUnderflowException
      */
-    public int headAlarmRetrieval(int currentPriority) throws QueueUnderflowException;
+    //public int headAlarmRetrieval(int currentPriority) throws QueueUnderflowException;
     
     /**
-     * The priority of the chosen priority item. Throw an exception if it's empty.
+     * Return top priority. Deprecated.
      *
      * @return The item with the highest priority
      * @throws QueueUnderflowException
      */
-    public int headPriority() throws QueueUnderflowException;
+    //public int headPriority() throws QueueUnderflowException;
 
     /**
      * Remove the highest priority item from the queue. Throw an exception if
@@ -84,10 +84,10 @@ public interface PriorityQueue<T> {
      *
      * @throws QueueUnderflowException
      */
-    public void remove() throws QueueUnderflowException;
+    //public void remove() throws QueueUnderflowException;
 
     /**
-     * Remove the named item from editing.
+     * Remove the named item from editing. Enhanced version of original remove method.
      *
      * @param editRemoval
      * @throws QueueUnderflowException

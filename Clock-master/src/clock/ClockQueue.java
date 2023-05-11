@@ -40,6 +40,9 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         }
     }
     
+    /**
+     * Finds an item which matches priority with headTime
+    */
     @Override
     public T headEquals(int headTime) throws QueueUnderflowException {
         if (isEmpty()) {
@@ -54,6 +57,9 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         }
     }
     
+    /**
+    * Finds the priority of any possible matches
+    */
     @Override
     public int headRetrieval(int samePriority) throws QueueUnderflowException {
         if (isEmpty()) {
@@ -68,6 +74,9 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         }
     }
     
+    /**
+    *  Finds the next alarm from the current time, if there is only one, it defaults to it.
+    */
     @Override
     public int headCurrentRetrieval(int searchHead) throws QueueUnderflowException {
         if (isEmpty()) {
@@ -86,6 +95,10 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         }
     }
     
+    /**
+    * Deprecated version of the above retrieval method.
+    */
+    /*
     @Override
     public int headAlarmRetrieval(int currentPriority) throws QueueUnderflowException {
         if (isEmpty()) {
@@ -105,7 +118,12 @@ public class ClockQueue<T> implements PriorityQueue<T> {
             
         }
     }
+    */
     
+    /**
+    * Deprecated method used before priority overhaul.
+    */
+    /*
     @Override
     public int headPriority() throws QueueUnderflowException {
         if (isEmpty()) {
@@ -114,7 +132,11 @@ public class ClockQueue<T> implements PriorityQueue<T> {
             return ((PriorityItem<T>) storage[0]).getPriority();
         }
     }
+    */
 
+    /**
+    * Adds the items to the queue depending on their priority, lowest number first.
+    */
     @Override
     public void add(T item, int priority) throws QueueOverflowException {
         tailIndex = tailIndex + 1;
@@ -133,6 +155,10 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         }
     }
 
+    /**
+    * Original remove method, deprecated.
+    */
+    /*
     @Override
     public void remove() throws QueueUnderflowException {
         if (isEmpty()) {
@@ -144,7 +170,11 @@ public class ClockQueue<T> implements PriorityQueue<T> {
             tailIndex = tailIndex - 1;
         }
     }
+    */
     
+    /**
+    * Final method used for deletion, this method finds the relevant item for deletion and moves through the queue to deletion.
+    */
     public void removeEdit(int editRemoval) throws QueueUnderflowException {
         if (isEmpty()) {
             throw new QueueUnderflowException();
@@ -152,8 +182,6 @@ public class ClockQueue<T> implements PriorityQueue<T> {
             
             int tail = 0;
             int i = tailIndex;
-            
-            
             
             /*
             while (i > 0) {
@@ -192,6 +220,9 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         return tailIndex < 0;
     }
 
+    /**
+    * Original toString method, mainly used for debugging.
+    */
     @Override
     public String toString() {
         String result = "[";
@@ -205,6 +236,9 @@ public class ClockQueue<T> implements PriorityQueue<T> {
         return result;
     }
     
+    /**
+    * New toString method, used to retrieve all items of the queue in order to save it to file.
+    */
     @Override
     public String toStringSave() {
         String result = "[";

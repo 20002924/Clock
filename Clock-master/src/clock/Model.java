@@ -27,7 +27,13 @@ public class Model extends Observable {
         update();
     }
     
+    /** 
+     * The Update method, this updates the time on the clock for both the current time and the alarm.
+     */
     public void update() {
+        /** 
+        * The calendar file gets the current time and the hour, minute and seconds use this to make changes to the clock panel.
+        */
         Calendar date = Calendar.getInstance();
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         String Tiempo = (String) formatter.format(new Date());
@@ -41,8 +47,16 @@ public class Model extends Observable {
         }
         //System.out.println(hour+" "+minute+" "+second);
         //System.out.println(Tiempo);
+        
+        /** 
+        * The priority queue is called from the QueueDefine class in order to initialise it in this class.
+        */
         final PriorityQueue<TimeNumber> q;
         q = ClockQueue.ClockQueueInstance;
+        /** 
+        * This section keeps the visual indicator for the next alarm working.
+        * It does this through checking for the next time from the current one and setting the hours, minutes and seconds to it.
+        */
         String rawTiempo = Tiempo.replaceAll(":","");
         int convertedTiempo = Integer.valueOf(rawTiempo);
         int newAlarmPriority = 0;
@@ -53,6 +67,9 @@ public class Model extends Observable {
         }
                 //System.out.println("Next in the queue is: " + newAlarmPriority);
                 String newAlarmName = String.valueOf(newAlarmPriority);
+                /** 
+                * There needs to be statements checking the length of the returned next alarm due to integers not including zeroes in front.
+                */
                 if (newAlarmName.length() == 6) {
                 int trio1 = Integer.parseInt(newAlarmName.substring(0, 2));
                 int trio2 = Integer.parseInt(newAlarmName.substring(2, 4));
@@ -67,24 +84,37 @@ public class Model extends Observable {
                 alarmSecond = alarmDate.get(Calendar.SECOND);
                 }
                 if(newAlarmName.length() == 4) {
-                int trio2 = Integer.parseInt(newAlarmName.substring(2, 4));
-                int trio3 = Integer.parseInt(newAlarmName.substring(4, 6));
-                System.out.println("Testing: "+" "+trio2+" "+trio3);
+                int trio2 = Integer.parseInt(newAlarmName.substring(0, 2));
+                int trio3 = Integer.parseInt(newAlarmName.substring(2, 4));
+                //System.out.println("Testing: "+" "+trio2+" "+trio3);
+                Calendar alarmDate = Calendar.getInstance();
+                alarmDate.set(Calendar.SECOND, trio3);
+                alarmDate.set(Calendar.MINUTE, trio2);
+                alarmDate.set(Calendar.HOUR, 0);
+                alarmHour = alarmDate.get(Calendar.HOUR);
+                alarmMinute = alarmDate.get(Calendar.MINUTE);
+                alarmSecond = alarmDate.get(Calendar.SECOND);
                 }
                 
         try {
             //String timeHead = q.head().getTime();
-            int priorityHead = q.headPriority();
+            //int priorityHead = q.headPriority();
             //String rawTiempo = Tiempo.replaceAll(":","");
             //String rawTime = timeHead.replaceAll(":","");
             //int convertedTiempo = Integer.valueOf(rawTiempo);
             //int convertedTime = Integer.valueOf(rawTime);
             TimeNumber timenumberCompare = new TimeNumber(Tiempo);
             
+            /** 
+            * This section calls a pop-up box should the alarm time match the current time.
+            */
             TimeNumber headTime = q.headEquals(convertedTiempo);
             int checkSamePriority = q.headRetrieval(convertedTiempo);
             if (convertedTiempo == checkSamePriority) {
                 //JOptionPane.showMessageDialog(null, "The time is now! Alarm for : "+headTime+"!");
+                /** 
+                *  The following code opens a pop-up box asking if the user wants to remove the triggered alarm from the queue.
+                */
                 int alarmQueryResult = JOptionPane.showConfirmDialog(null,"The time is now! Alarm for : "+headTime+"!"+" Do you want to remove this alarm?", "Alarm Query",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (alarmQueryResult == JOptionPane.YES_OPTION){
                     String chosenDeletedAlarm = String.valueOf(headTime);
@@ -92,6 +122,9 @@ public class Model extends Observable {
                     System.out.println(q);
                     //int nextAlarm = q.headAlarmRetrieval(convertedTiempo);
                     //System.out.println("The next in queue is: " + nextAlarm);
+                    /**
+                    * removeFromAlarm is called from View in order to remove the removed item from the scroll list.
+                    */
                     View.removeFromAlarm(headTime);
                 }
                 else if (alarmQueryResult == JOptionPane.NO_OPTION){
@@ -103,6 +136,10 @@ public class Model extends Observable {
                 //String fixInput = newAlarmName.replaceAll("..(?!$)", "$0:");
                 //System.out.println("Testing: "+trio1+" "+trio2+" "+trio3);
                 
+                
+                /** 
+                * Removed code from when priority was being calculated by difference between alarm and current time.
+                */
                 /*
                 String removedAlarm = q.head().getTime();
                     System.out.println("Removing " + removedAlarm + " from the head of the queue");
@@ -116,6 +153,9 @@ public class Model extends Observable {
                 */
             
             }
+            /** 
+            * Same as above, code used before restructuring priority.
+            */
             /*
             else if (convertedTiempo > convertedTime) {
                 JOptionPane.showMessageDialog(null, "Alarm expired for : "+timeHead+"!");

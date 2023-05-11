@@ -1,10 +1,8 @@
 package clock;
 
 /**
- * Minimal "person" class.
- *
- * At the moment a Person object just holds their time, but in a more realistic
- * system, there would obviously be more.
+ * Edited class for use in the priority queue.
+ * Used for storing the times with colons in place.
  */
 public class TimeNumber {
 
