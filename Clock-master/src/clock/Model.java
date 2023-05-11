@@ -95,6 +95,27 @@ public class Model extends Observable {
                 alarmMinute = alarmDate.get(Calendar.MINUTE);
                 alarmSecond = alarmDate.get(Calendar.SECOND);
                 }
+                if(newAlarmName.length() == 2) {
+                int trio2 = Integer.parseInt(newAlarmName.substring(0, 2));
+                //System.out.println("Testing: "+" "+trio2+" "+trio3);
+                Calendar alarmDate = Calendar.getInstance();
+                alarmDate.set(Calendar.SECOND, trio2);
+                alarmDate.set(Calendar.MINUTE, 0);
+                alarmDate.set(Calendar.HOUR, 0);
+                alarmHour = alarmDate.get(Calendar.HOUR);
+                alarmMinute = alarmDate.get(Calendar.MINUTE);
+                alarmSecond = alarmDate.get(Calendar.SECOND);
+                }
+                if(newAlarmName.length() == 0) {
+                //System.out.println("Testing: "+" "+trio2+" "+trio3);
+                Calendar alarmDate = Calendar.getInstance();
+                alarmDate.set(Calendar.SECOND, 0);
+                alarmDate.set(Calendar.MINUTE, 0);
+                alarmDate.set(Calendar.HOUR, 0);
+                alarmHour = alarmDate.get(Calendar.HOUR);
+                alarmMinute = alarmDate.get(Calendar.MINUTE);
+                alarmSecond = alarmDate.get(Calendar.SECOND);
+                }
                 
         try {
             //String timeHead = q.head().getTime();
